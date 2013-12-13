@@ -14,6 +14,8 @@ $(function () {
             strokeOpacity: 0.7,
             data: [],
             dataType: "",
+            province: "",
+            allowAllWards: false,
             drawAll: false
         },
 
@@ -38,10 +40,31 @@ $(function () {
                     url = "municipalities.js";
                     break;
                 case "wards":
-                    url = "wards.js";
+                    // province filter not supplied
+                    if (!this.options.province)
+                        // error if not specifically requesting full wards file
+                        if (!this.options.allowAllWards)
+                            throw ("Error: Ward dataType requires either the province filter or the allowAllWards option enabled");
+                        else
+                            url = "wards.js";
+                    else {
+                        switch (this.options.province) {
+                            case "Eastern Cape": url = "wards-ec.js"; break;
+                            case "Free State": url = "wards-fs.js"; break;
+                            case "Gauteng": url = "wards-gt.js"; break;
+                            case "KwaZulu-Natal": url = "wards-kzn.js"; break;
+                            case "Limpopo": url = "wards-lp.js"; break;
+                            case "Mpumalanga": url = "wards-mp.js"; break;
+                            case "North West": url = "wards-nw.js"; break;
+                            case "Northern Cape": url = "wards-nc.js"; break;
+                            case "Western Cape": url = "wards-wc.js"; break;
+                            default:
+                                throw ("Error: Invalid province filter: " + this.options.province);
+                        }
+                    }
                     break;
                 default:
-                    throw ("Not Implemented dataType option in _getData: " + this.options.dataType);
+                    throw ("Error: Not Implemented dataType option in _getData: " + this.options.dataType);
             }
 
             var json = null;
@@ -130,7 +153,7 @@ $(function () {
             this._getBounds(data);
 
             // setup map
-             var mapOptions = { zoom: 0, center: new google.maps.LatLng(0, 0), mapTypeId: google.maps.MapTypeId.TERRAIN };
+            var mapOptions = { zoom: 0, center: new google.maps.LatLng(0, 0), mapTypeId: google.maps.MapTypeId.TERRAIN };
             var map = new google.maps.Map(this.element[0], mapOptions),
                 bounds = new google.maps.LatLngBounds();
 
@@ -170,7 +193,7 @@ $(function () {
 
                     // if there's html for a popup, add the listener
                     if (polygon.html) {
-                        google.maps.event.addListener(polygon, 'click', function(event) {
+                        google.maps.event.addListener(polygon, 'click', function (event) {
                             infoWindow.setContent(this.html);
                             infoWindow.setPosition(event.latLng);
                             infoWindow.open(map);
