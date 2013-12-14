@@ -185,7 +185,10 @@ $(function () {
                         strokeWeight: item.strokeWidth || this.options.strokeWidth,
                         fillColor: item.fillColor || this.options.fillColor,
                         fillOpacity: item.fillOpacity || this.options.fillOpacity,
-                        html: item.html
+                        html: item.html,
+                        // include these properties so the click event handler can access them
+                        dataType: this.options.dataType,
+                        id: item.id
                     });
 
                     // set on map
@@ -198,6 +201,11 @@ $(function () {
                             infoWindow.setPosition(event.latLng);
                             infoWindow.open(map);
                         });
+                    }
+
+                    // if there's a click event handler, add the listener
+                    if (this.options.click) {
+                        google.maps.event.addListener(polygon, 'click', this.options.click); // function(event)
                     }
                 }
             }
