@@ -20,8 +20,9 @@ Hence: mapper.js
 
 The mapper.js plugin stores simplified shape file data in JSON format, and uses this data to draw the shapes on Google Maps. The biggest file is 10MB for the full wards file; however, the wards are also stored in separate files by province, ranging from 0.5MB to 2.5MB in size. (It's recommended to use these files, rather than the full ward file.)
 
-DEMO
+Demo
 ----
+
 For a working demo with several different examples, see: http://www.capesean.co.za/mapper
 
 
